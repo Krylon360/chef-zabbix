@@ -117,6 +117,18 @@ class Chef
           connection.query(get_template_request)
         end
 
+        def find_action_ids(connection, name)
+          request = {
+            :method => 'action.get',
+            :params => {
+              :filter => {
+                :name => name
+              }
+            }
+          }
+          connection.query(request)
+        end
+
         def find_application_ids(connection, application, template_id)
           request = {
             :method => 'application.get',
@@ -280,6 +292,42 @@ class Chef
           connection.query(request)
         end
 
+        def find_mediatype_ids(connection, name)
+          request = {
+            :method => 'mediatype.get',
+            :params => {
+              :filter => {
+                :description => name
+              }
+            }
+          }
+          connection.query(request)
+        end
+
+        def find_user_ids(connection, user)
+          user_id_request = {
+            :method => 'user.get',
+            :params => {
+              :filter => {
+                :alias => user
+              }
+            }
+          }
+          connection.query(user_id_request)
+        end
+
+        def find_usergroup_ids(connection, usergroup)
+          group_id_request = {
+            :method => 'usergroup.get',
+            :params => {
+              :filter => {
+                :name => usergroup
+              }
+            }
+          }
+          connection.query(group_id_request)
+        end
+
         # get_* routines allow arbitrary searching of the existing Zabbix config
         # search_params should be a structure of parameters to pass to the Zabbix API
         # e.g. calling get_triggers with {"search" => { "description" => "something" } }
@@ -353,6 +401,21 @@ class Chef
           end
 
           templates
+        end
+
+        def get_hostgroups(connection, search_params)
+          search_params = {} if search_params.nil?
+          search_params[:output] = 'extend'
+          request = {
+            :method => 'hostgroup.get',
+            :params => search_params
+          }
+          hostgroups = connection.query(request)
+          if hostgroups.nil?
+            Chef::Application.fatal! 'Could not retrieve existing hostgroup list'
+          end
+
+          hostgroups
         end
       end
     end
