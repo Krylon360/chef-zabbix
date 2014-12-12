@@ -34,7 +34,8 @@ action :create_or_update do
     params[:conditions] = new_resource.conditions if new_resource.conditions
 
     if new_resource.operations
-      # Operations may contain user group references by name, so we loop over them to replace with the group ID
+      # Operations may contain usergroup and mediatype references by name,
+      # so we loop over them to replace with the IDs
       params[:operations] = new_resource.operations
       params[:operations].each do |op|
         if op[:opmessage_groups]
@@ -49,6 +50,16 @@ action :create_or_update do
           op[:opmessage_grp] << { :usrgrpid => usergroup_ids.first['usrgrpid']}
           end
           op.delete(:opmessage_groups)
+        end
+        if op[:opmessage][:mediatype]
+          mediatype_ids = Chef::Zabbix::API.find_mediatype_ids(connection, op[:opmessage][:mediatype])
+          if mediatype_ids.empty?
+            Chef::Log.fatal "action:create_or_update: Operation contained reference to non-existant mediatype '#{op[:opmessage][:mediatype]}'"
+          end
+
+          op[:opmessage][:mediatypeid] = mediatype_ids.first['mediatypeid']
+
+          op[:opmessage].delete(:mediatype)
         end
       end
     end

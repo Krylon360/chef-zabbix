@@ -328,6 +328,19 @@ class Chef
           connection.query(group_id_request)
         end
 
+        def find_usermedia_ids(connection, user, media)
+          user_id_request = {
+            :method => 'user.get',
+            :params => {
+              :filter => {
+                :userid => user,
+                :mediatypeid => media
+              }
+            }
+          }
+          connection.query(user_id_request)
+        end
+
         # get_* routines allow arbitrary searching of the existing Zabbix config
         # search_params should be a structure of parameters to pass to the Zabbix API
         # e.g. calling get_triggers with {"search" => { "description" => "something" } }

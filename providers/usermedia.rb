@@ -21,10 +21,21 @@ action :create_or_update do
     params[:medias][:period] = new_resource.period
     params[:medias][:active] = 0
 
-    connection.query(
-      :method => 'user.addmedia',
-      :params => params
-    )
+   verb = 'addmedia'
+
+   # Check to see if this mediatype already exists on this user
+   media_ids = Chef::Zabbix::API.find_usermedia_ids(connection, userid, mediatypeid)
+
+   unless media_ids.empty?
+     params[:mediaid] = media_ids.first['mediaid']
+     verb = 'updatemedia'
+   end
+
+   method = "user.#{verb}"
+   connection.query(
+     :method => method,
+     :params => params
+   )
   end
   new_resource.updated_by_last_action(true)
 end
