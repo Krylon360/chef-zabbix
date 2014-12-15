@@ -33,6 +33,87 @@ class Chef
         end
       end
 
+      class ActionConditionType
+        include Enumeration
+        enum :host_group,                  0
+        enum :host,                        1
+        enum :trigger,                     2
+        enum :trigger_name,                3
+        enum :trigger_severity,            4
+        enum :trigger_value,               5
+        enum :time_period,                 6
+        enum :host_ip,                     7
+        enum :discovered_service_type,     8
+        enum :discovered_service_port,     9
+        enum :discovery_status,            10
+        enum :uptime_or_downtime_duration, 11
+        enum :received_value,              12
+        enum :host_template,               13
+        enum :application,                 15
+        enum :maintenance_status,          16
+        enum :node,                        17
+        enum :discovery_rule,              18
+        enum :discovery_check,             19
+        enum :proxy,                       20
+        enum :discovery_object,            21
+        enum :host_name,                   22
+        enum :event_type,                  23
+        enum :host_metadata,               24
+      end
+
+      class ActionEvalType
+        include Enumeration
+        enum :and_or, 0
+        enum :and,    1
+        enum :or,     2
+      end
+
+      class ActionEventSource
+        include Enumeration
+        enum :trigger,           0
+        enum :discovery,         1
+        enum :auto_registration, 2
+        enum :internal,          3
+      end
+
+      class ActionOperationType
+        include Enumeration
+        enum :send_message,           0
+        enum :remote_command,         1
+        enum :add_host,               2
+        enum :remove_host,            3
+        enum :add_to_host_group,      4
+        enum :remove_from_host_group, 5
+        enum :link_to_template,       6
+        enum :unlink_from_template,   7
+        enum :enable_host,            8
+        enum :disable_host,           9
+      end
+
+      class ActionOperator
+        include Enumeration
+        enum :equals,           0
+        enum :not_equals,       1
+        enum :like,             2
+        enum :not_like,         3
+        enum :in,               4
+        enum :equal_or_greater, 5
+        enum :equal_or_lesser,  6
+        enum :not_in,           7
+      end
+
+      class ActionRecoveryStatus
+        include Enumeration
+        enum :disabled, 0
+        enum :enabled,  1
+      end
+
+      class ActionStatus
+        include Enumeration
+        enum :enabled,  0
+        enum :disabled, 1
+      end
+
       class AuthType
         include Enumeration
         enum :password,     0
@@ -94,13 +175,18 @@ class Chef
 
       class TriggerPriority
         include Enumeration
-
         enum :not_classified, 0
         enum :information, 1
         enum :warning, 2
         enum :average, 3
         enum :high, 4
         enum :disaster, 5
+      end
+
+      class TriggerValue
+        include Enumeration
+        enum :ok, 0
+        enum :problem, 1
       end
 
       class ItemStatus
@@ -180,6 +266,21 @@ class Chef
         enum :snmp,   2
         enum :ipmi,   3
         enum :jmx,    4
+      end
+
+      class MediaType
+        include Enumeration
+        enum :email,       0
+        enum :script,      1
+        enum :SMS,         2
+        enum :Jabber,      3
+        enum :EZ_Texting,  100
+      end
+
+      class MediaTypeStatus
+        include Enumeration
+        enum :enabled,  0
+        enum :disabled, 1
       end
     end
   end

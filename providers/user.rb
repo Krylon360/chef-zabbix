@@ -119,18 +119,18 @@ action :delete do
     }
     user = connection.query(get_user_request).first
     if user.nil? || user.empty?
-      Chef::Application.fatal! "Could not find user for delete: '#{new_resource.alias}'"
+      Chef::Log.debug "Could not find user for delete, ignoring: '#{new_resource.alias}'"
+    else
+      user_delete_request = {
+        :method => 'user.delete',
+        :params => [
+          user['userid']
+        ]
+      }
+      Chef::Log.info "Deleting user '#{new_resource.alias}'"
+      result = connection.query(user_delete_request)
+      Application.fatal! "Error deleting user '#{new_resource.alias}', see Chef errors" if result.nil? || result.empty? || result['userids'].nil? || result['userids'].empty? || !result['userids'].include?(user['userid'])
     end
-
-    user_delete_request = {
-      :method => 'user.delete',
-      :params => [
-        user['userid']
-      ]
-    }
-    Chef::Log.info "Deleting user '#{new_resource.alias}'"
-    result = connection.query(user_delete_request)
-    Application.fatal! "Error deleting user '#{new_resource.alias}', see Chef errors" if result.nil? || result.empty? || result['userids'].nil? || result['userids'].empty? || !result['userids'].include?(user['userid'])
     new_resource.updated_by_last_action(true)
   end
 end
