@@ -18,6 +18,8 @@ action :add do
     owner node['zabbix']['user']
     group node['zabbix']['group']
     mode 0640
+    # The userparam config file may have passwords, depending on the service involved.
+    sensitive true
     notifies :restart, "service[#{service_name}]"
   end
   new_resource.updated_by_last_action(true)
